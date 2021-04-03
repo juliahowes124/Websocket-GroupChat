@@ -58,13 +58,28 @@ $("form").submit(function (evt) {
   evt.preventDefault();
   let text = $("#m").val();
   let type = "chat";
-  if(text === "/joke") {
+  textArr = text.split(' ');
+  let pm = {};
+  let newName = "";
+
+  if(textArr[0] === "/joke") {
     type = "joke";
   }
-  if(text === "/members") {
+  if (textArr[0] === "/priv") {
+    type = "privateMessage";
+    pm.to = textArr[1];
+    pm.message = textArr.slice(2).join(" ");
+
+  }
+  if(textArr[0] === "/members") {
     type = "members";
   }
-  let data = { type, text };
+  if(textArr[0] === "/name") {
+    type = "nameChange";
+    newName = textArr[1];
+  }
+
+  let data = { type, text, pm, newName };
   ws.send(JSON.stringify(data));
 
   $("#m").val("");

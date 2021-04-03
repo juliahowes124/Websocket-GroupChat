@@ -40,7 +40,6 @@ class ChatUser {
 
   handleJoin(name) {
     this.name = name;
-    console.log('THIS CHAT USER: ',this);
     this.room.join(this);
     this.room.broadcast({
       type: "note",
@@ -61,13 +60,30 @@ class ChatUser {
     });
   }
 
-  handleSelfMessage(text) {
-    this.send(JSON.stringify({
-      name: this.name,
-      type: "chat",
-      text
-    }));
+  handlePm(pm) {
+      this.room.sendToOne(
+        //if pm.to is defined then that is the recipient otherwise send to self
+        pm.to? pm.to: this.name, {
+        name: this.name,
+        type: "chat",
+        text: pm.message,
+      });
   }
+
+  handleNameChange(newName) {
+    this.room.broadcast({
+      type: "note",
+      text: `${this.name} is now "${newName}".`,
+    });
+    this.name = newName;
+  }
+
+  // handleSelfMessage(text) {
+  //   this.send(JSON.stringify({
+  //     name: this.name,
+  //     type: "chat",
+  //     text
+  //   }));
 
   /** Handle messages from client:
    *
@@ -83,8 +99,16 @@ class ChatUser {
     let msg = JSON.parse(jsonData);
 
     if (msg.type === "join") this.handleJoin(msg.name);
-    else if (msg.type === "joke") this.handleSelfMessage("this is a joke");
-    else if (msg.type === "members") this.handleSelfMessage(this.getMembersList());
+    else if (msg.type === "joke"){
+      msg.pm.message = "this is a joke";
+      this.handlePm(msg.pm);
+    } 
+    else if (msg.type === "members") {
+      msg.pm.message = this.getMembersList();
+      this.handlePm(msg.pm);
+    }
+    else if (msg.type === "nameChange") this.handleNameChange(msg.newName);
+    else if (msg.type === "privateMessage") this.handlePm(msg.pm);
     else if (msg.type === "chat") this.handleChat(msg.text);
     else throw new Error(`bad message: ${msg.type}`);
   }

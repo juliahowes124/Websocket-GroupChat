@@ -66,9 +66,15 @@ class Room {
     }
   }
 
-  // broadcastToSelf(member, data) {
-  //   this.members.
-  // }
+  sendToOne(memberName, data) {
+    for (let member of this.members) {
+      if (memberName === member.name) {
+        member.send(JSON.stringify(data));
+      }
+    }
+  }
+
+  
 
 
 }
