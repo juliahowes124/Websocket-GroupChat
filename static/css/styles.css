@@ -9,8 +9,9 @@ body {
 }
 
 form {
-  background: black;
+  background: lightgray;
   position: fixed;
+  padding: 1rem;
   bottom: 0;
   width: 100%;
 }
@@ -23,9 +24,10 @@ form input {
 
 form button {
   float: right;
-  background-color: tomato;
+  background-color: darkblue;
   border: none;
   border-radius: 5px;
+  color: white;
   padding: 1em 0;
   width: 14%;
   margin: 3px 0;
