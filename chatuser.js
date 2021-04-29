@@ -72,7 +72,7 @@ class ChatUser {
         pm.to? pm.to: this.name, {
         name: this.name,
         type: "chat",
-        text: pm.message,
+        text: `[PRIVATE] ${pm.message}`,
       });
   }
 
