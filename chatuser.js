@@ -9,13 +9,14 @@ async function getJoke() {
   const resp = await axios.get('https://icanhazdadjoke.com/', {headers: {Accept: "application/json"}});
   return resp.data.joke;
 }
+
 /** ChatUser is a individual connection from client -> server to chat. */
 
 class ChatUser {
   /** Make chat user: store connection-device, room.
    *
    * @param send {function} callback to send message to this user
-   * @param room {Room} room user will be in
+   * @param roomName {Room} room user will be in
    * */
 
   constructor(send, roomName) {
@@ -83,13 +84,6 @@ class ChatUser {
     });
     this.name = newName;
   }
-
-  // handleSelfMessage(text) {
-  //   this.send(JSON.stringify({
-  //     name: this.name,
-  //     type: "chat",
-  //     text
-  //   }));
 
   /** Handle messages from client:
    *
